@@ -90,6 +90,11 @@
             --youtube-text: #dc2626;
             --youtube-bg-hover: rgba(255, 0, 0, 0.15);
             --youtube-border-hover: #dc2626;
+
+            /* iframe modal */
+            --iframe-overlay: rgba(0, 0, 0, 0.5);
+            --iframe-bg: #fff;
+            --iframe-radius: 28px;
         }
 
         * {
@@ -495,6 +500,152 @@
             }
         }
 
+        /* ============================================================
+           IFRAME MODAL (NEW – opens tools inside the page)
+           ============================================================ */
+        .iframe-overlay {
+            position: fixed;
+            inset: 0;
+            background: var(--iframe-overlay);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            z-index: 20000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+
+        .iframe-overlay.active {
+            display: flex;
+        }
+
+        .iframe-modal {
+            width: 100%;
+            max-width: 1280px;
+            height: 90vh;
+            max-height: 90vh;
+            background: var(--iframe-bg);
+            border-radius: var(--iframe-radius);
+            box-shadow: 0 40px 100px -20px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            animation: modalIn 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        @keyframes modalIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95) translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .iframe-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 24px;
+            background: rgba(255, 255, 255, 0.9);
+            border-bottom: 1px solid rgba(180, 130, 30, 0.15);
+            backdrop-filter: blur(8px);
+            flex-shrink: 0;
+        }
+
+        .iframe-header .iframe-title {
+            font-weight: 600;
+            font-size: 16px;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .iframe-header .iframe-title i {
+            color: var(--accent-gold);
+        }
+
+        .iframe-close {
+            background: rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            font-size: 18px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: 0.25s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .iframe-close:hover {
+            background: rgba(220, 38, 38, 0.1);
+            border-color: rgba(220, 38, 38, 0.3);
+            color: #dc2626;
+            transform: rotate(90deg) scale(1.05);
+        }
+
+        .iframe-close:active {
+            transform: rotate(90deg) scale(0.95);
+        }
+
+        .iframe-body {
+            flex: 1;
+            width: 100%;
+            background: #f8fafc;
+            position: relative;
+        }
+
+        .iframe-body iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: block;
+        }
+
+        .iframe-loading {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f8fafc;
+            color: var(--text-secondary);
+            font-size: 16px;
+            font-weight: 500;
+            gap: 12px;
+            pointer-events: none;
+            transition: opacity 0.3s;
+            z-index: 1;
+        }
+
+        .iframe-loading.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .iframe-loading .spinner {
+            width: 28px;
+            height: 28px;
+            border: 3px solid rgba(217, 119, 6, 0.15);
+            border-top-color: var(--accent-gold);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
         @media (max-width: 1024px) {
             .box-grid {
                 grid-template-columns: repeat(2, 1fr);
@@ -531,6 +682,22 @@
                 margin: 0 6px;
                 font-size: 14px;
             }
+            .iframe-modal {
+                height: 95vh;
+                max-height: 95vh;
+                border-radius: 20px;
+            }
+            .iframe-header {
+                padding: 12px 16px;
+            }
+            .iframe-header .iframe-title {
+                font-size: 14px;
+            }
+            .iframe-close {
+                width: 34px;
+                height: 34px;
+                font-size: 15px;
+            }
         }
 
         @media (max-width: 640px) {
@@ -556,6 +723,31 @@
             .chaupai-row .chaupai-text {
                 font-size: 15px;
             }
+            .iframe-overlay {
+                padding: 12px;
+            }
+            .iframe-modal {
+                height: 96vh;
+                max-height: 96vh;
+                border-radius: 16px;
+            }
+            .iframe-header {
+                padding: 10px 12px;
+            }
+            .iframe-header .iframe-title {
+                font-size: 13px;
+            }
+            .iframe-header .iframe-title span {
+                max-width: 140px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+            .iframe-close {
+                width: 32px;
+                height: 32px;
+                font-size: 14px;
+            }
         }
 
         @media (max-width: 400px) {
@@ -580,6 +772,30 @@
 <body>
 
     <div class="toast" id="toast"></div>
+
+    <!-- ============================================================
+    IFRAME MODAL (opens tools inside the page)
+    ============================================================ -->
+    <div class="iframe-overlay" id="iframeOverlay">
+        <div class="iframe-modal">
+            <div class="iframe-header">
+                <div class="iframe-title">
+                    <i class="fas fa-bolt"></i>
+                    <span id="iframeTitle">Tool</span>
+                </div>
+                <button class="iframe-close" id="iframeClose" aria-label="Close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="iframe-body">
+                <div class="iframe-loading" id="iframeLoading">
+                    <div class="spinner"></div>
+                    <span>Loading tool...</span>
+                </div>
+                <iframe id="toolIframe" src="about:blank" title="Tool" loading="lazy" allow="fullscreen"></iframe>
+            </div>
+        </div>
+    </div>
 
     <div class="main-container">
 
@@ -610,28 +826,28 @@
         </div>
 
         <div class="box-grid">
-            <div class="box" onclick="window.open('https://adityapr848101-create.github.io/Quiz-by-Adi/vertical-cut.html', '_blank')">
+            <div class="box" data-tool="PDF Vertical Cut" data-url="https://adityapr848101-create.github.io/Quiz-by-Adi/vertical-cut.html">
                 <div class="box-icon"><i class="fas fa-arrows-alt-v"></i></div>
                 <h3>PDF Vertical Cut</h3>
                 <p>Split pages vertically</p>
                 <span class="tag">PDF TOOL</span>
             </div>
 
-            <div class="box" onclick="window.open('https://adityapr848101-create.github.io/Quiz-by-Adi/horizontal-cut.html', '_blank')">
+            <div class="box" data-tool="Manual Horizontal Cut" data-url="https://adityapr848101-create.github.io/Quiz-by-Adi/horizontal-cut.html">
                 <div class="box-icon"><i class="fas fa-arrows-alt-h"></i></div>
                 <h3>Manual Horizontal Cut</h3>
                 <p>Slice PDF horizontally</p>
                 <span class="tag">PDF TOOL</span>
             </div>
 
-            <div class="box" onclick="window.open('https://adityapr848101-create.github.io/Quiz-by-Adi/pdf-to-quiz.html', '_blank')">
+            <div class="box" data-tool="PDF to Quiz" data-url="https://adityapr848101-create.github.io/Quiz-by-Adi/pdf-to-quiz.html">
                 <div class="box-icon"><i class="fas fa-file-pdf"></i></div>
                 <h3>PDF to Quiz</h3>
                 <p>Convert PDF into custom test</p>
                 <span class="tag">⭐ SMART TOOL</span>
             </div>
 
-            <div class="box" onclick="window.open('https://adityapr848101-create.github.io/Quiz-by-Adi/quiz-maker.html', '_blank')">
+            <div class="box" data-tool="Quiz Maker" data-url="https://adityapr848101-create.github.io/Quiz-by-Adi/quiz-maker.html">
                 <div class="box-icon"><i class="fas fa-layer-group"></i></div>
                 <h3>Quiz Maker</h3>
                 <p>Build custom tests</p>
@@ -661,34 +877,72 @@
             }, 3000);
         }
 
-        // Handle box clicks
-        document.querySelectorAll('.box').forEach((box) => {
-            const originalClick = box.getAttribute('onclick');
-            if (originalClick) {
-                box.removeAttribute('onclick');
-                box.addEventListener('click', function(e) {
-                    const match = originalClick.match(/window\.open\('([^']+)'/);
-                    if (match) {
-                        const url = match[1];
-                        showToast('⏳ Opening...', 'info');
-                        const newTab = window.open(url, '_blank');
-                        if (newTab) {
-                            newTab.focus();
-                            showToast('✅ Tool opened successfully!', 'success');
-                        } else {
-                            showToast('⚠️ Popup blocked! Please allow popups.', 'error');
-                            const a = document.createElement('a');
-                            a.href = url;
-                            a.target = '_blank';
-                            a.rel = 'noopener noreferrer';
-                            a.style.display = 'none';
-                            document.body.appendChild(a);
-                            a.click();
-                            document.body.removeChild(a);
-                        }
-                    }
-                });
+        // ============================================================
+        // IFRAME MODAL LOGIC
+        // ============================================================
+        const iframeOverlay = document.getElementById('iframeOverlay');
+        const iframeClose = document.getElementById('iframeClose');
+        const iframeTitle = document.getElementById('iframeTitle');
+        const toolIframe = document.getElementById('toolIframe');
+        const iframeLoading = document.getElementById('iframeLoading');
+
+        function openTool(url, title) {
+            iframeTitle.textContent = title || 'Tool';
+            iframeLoading.classList.remove('hidden');
+            toolIframe.src = url;
+            iframeOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            showToast('⏳ Opening ' + (title || 'tool') + '...', 'info');
+        }
+
+        function closeTool() {
+            iframeOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+            // Small delay to allow animation, then clear src
+            setTimeout(() => {
+                toolIframe.src = 'about:blank';
+                iframeLoading.classList.remove('hidden');
+            }, 350);
+        }
+
+        // Iframe load event
+        toolIframe.addEventListener('load', function() {
+            if (toolIframe.src && toolIframe.src !== 'about:blank') {
+                iframeLoading.classList.add('hidden');
+                showToast('✅ Tool loaded successfully!', 'success');
             }
+        });
+
+        // Close on overlay click (outside modal)
+        iframeOverlay.addEventListener('click', function(e) {
+            if (e.target === iframeOverlay) {
+                closeTool();
+            }
+        });
+
+        // Close button
+        iframeClose.addEventListener('click', closeTool);
+
+        // Escape key closes
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && iframeOverlay.classList.contains('active')) {
+                closeTool();
+            }
+        });
+
+        // ============================================================
+        // BOX CLICK HANDLERS → OPEN IN IFRAME
+        // ============================================================
+        document.querySelectorAll('.box').forEach((box) => {
+            box.addEventListener('click', function() {
+                const url = this.dataset.url;
+                const title = this.dataset.tool;
+                if (url) {
+                    openTool(url, title);
+                } else {
+                    showToast('⚠️ Tool URL not found.', 'error');
+                }
+            });
         });
 
         console.log('%c✦ Quiz by Adi ✦', 'font-size:22px; font-weight:800; color:#d97706;');
@@ -702,6 +956,7 @@
         console.log('  📄 pdf-to-quiz.html');
         console.log('  📄 quiz-maker.html');
         console.log('🌐 Live URL: https://adityapr848101-create.github.io/Quiz-by-Adi/');
+        console.log('📌 Tools now open in an in-page iframe modal.');
     </script>
 
 </body>
